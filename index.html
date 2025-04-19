@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Click Game Siêu Vui</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      text-align: center;
+      background: linear-gradient(to right, #f8b500, #fceabb);
+      padding-top: 60px;
+    }
+
+    h1 {
+      font-size: 36px;
+      margin-bottom: 20px;
+    }
+
+    #score, #timer, #highscore {
+      font-size: 24px;
+      margin: 10px;
+    }
+
+    #click-btn, #start-btn {
+      padding: 15px 30px;
+      font-size: 20px;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      margin: 20px 10px;
+      transition: 0.2s;
+    }
+
+    #click-btn {
+      background-color: #e74c3c;
+      color: white;
+    }
+
+    #click-btn:hover {
+      background-color: #c0392b;
+    }
+
+    #start-btn {
+      background-color: #2ecc71;
+      color: white;
+    }
+
+    #start-btn:hover {
+      background-color: #27ae60;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🎯 Click càng nhanh càng tốt!</h1>
+  <p id="score">Điểm: 0</p>
+  <p id="highscore">🏆 Kỷ lục: 0</p>
+  <p id="timer">Thời gian: 10s</p>
+
+  <button id="start-btn" onclick="startGame()">Bắt đầu</button>
+  <button id="click-btn" onclick="increaseScore()" disabled>Click tôi!</button>
+
+  <script>
+    let score = 0;
+    let timeLeft = 10;
+    let timerInterval;
+    let highScore = localStorage.getItem("highScore") || 0;
+
+    document.getElementById("highscore").textContent = `🏆 Kỷ lục: ${highScore}`;
+
+    function startGame() {
+      score = 0;
+      timeLeft = 10;
+      document.getElementById("score").textContent = "Điểm: 0";
+      document.getElementById("timer").textContent = "Thời gian: 10s";
+      document.getElementById("click-btn").disabled = false;
+      document.getElementById("start-btn").disabled = true;
+
+      timerInterval = setInterval(() => {
+        timeLeft--;
+        document.getElementById("timer").textContent = `Thời gian: ${timeLeft}s`;
+        if (timeLeft <= 0) {
+          clearInterval(timerInterval);
+          document.getElementById("click-btn").disabled = true;
+          document.getElementById("start-btn").disabled = false;
+
+          if (score > highScore) {
+            highScore = score;
+            localStorage.setItem("highScore", highScore);
+            document.getElementById("highscore").textContent = `🏆 Kỷ lục: ${highScore}`;
+            alert(`🎉 Hết giờ! Bạn đạt ${score} điểm - Kỷ lục mới!`);
+          } else {
+            alert(`⏰ Hết giờ! Bạn đạt ${score} điểm!`);
+          }
+        }
+      }, 1000);
+    }
+
+    function increaseScore() {
+      score++;
+      document.getElementById("score").textContent = `Điểm: ${score}`;
+    }
+  </script>
+</body>
+</html>
