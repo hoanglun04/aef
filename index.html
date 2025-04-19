@@ -2,7 +2,7 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
-  <title>Click Game Siêu Vui</title>
+  <title>Click Game Bằng Bàn Phím</title>
   <style>
     body {
       font-family: 'Arial', sans-serif;
@@ -21,59 +21,54 @@
       margin: 10px;
     }
 
-    #click-btn, #start-btn {
+    #start-btn {
       padding: 15px 30px;
       font-size: 20px;
       border: none;
       border-radius: 12px;
       cursor: pointer;
-      margin: 20px 10px;
-      transition: 0.2s;
-    }
-
-    #click-btn {
-      background-color: #e74c3c;
-      color: white;
-    }
-
-    #click-btn:hover {
-      background-color: #c0392b;
-    }
-
-    #start-btn {
+      margin-top: 30px;
       background-color: #2ecc71;
       color: white;
+      transition: 0.2s;
     }
 
     #start-btn:hover {
       background-color: #27ae60;
     }
+
+    .hint {
+      font-style: italic;
+      margin-top: 10px;
+      color: #555;
+    }
   </style>
 </head>
 <body>
 
-  <h1>🎯 Click càng nhanh càng tốt!</h1>
+  <h1>🎮 Bấm phím càng nhanh càng điểm cao!</h1>
   <p id="score">Điểm: 0</p>
   <p id="highscore">🏆 Kỷ lục: 0</p>
   <p id="timer">Thời gian: 10s</p>
 
   <button id="start-btn" onclick="startGame()">Bắt đầu</button>
-  <button id="click-btn" onclick="increaseScore()" disabled>Click tôi!</button>
+  <p class="hint">👉 Nhấn phím <strong>Space (dấu cách)</strong> để ghi điểm!</p>
 
   <script>
     let score = 0;
     let timeLeft = 10;
     let timerInterval;
     let highScore = localStorage.getItem("highScore") || 0;
+    let gameStarted = false;
 
     document.getElementById("highscore").textContent = `🏆 Kỷ lục: ${highScore}`;
 
     function startGame() {
       score = 0;
       timeLeft = 10;
+      gameStarted = true;
       document.getElementById("score").textContent = "Điểm: 0";
       document.getElementById("timer").textContent = "Thời gian: 10s";
-      document.getElementById("click-btn").disabled = false;
       document.getElementById("start-btn").disabled = true;
 
       timerInterval = setInterval(() => {
@@ -81,7 +76,7 @@
         document.getElementById("timer").textContent = `Thời gian: ${timeLeft}s`;
         if (timeLeft <= 0) {
           clearInterval(timerInterval);
-          document.getElementById("click-btn").disabled = true;
+          gameStarted = false;
           document.getElementById("start-btn").disabled = false;
 
           if (score > highScore) {
@@ -96,10 +91,13 @@
       }, 1000);
     }
 
-    function increaseScore() {
-      score++;
-      document.getElementById("score").textContent = `Điểm: ${score}`;
-    }
+    document.addEventListener("keydown", function(e) {
+      if (gameStarted && e.code === "Space") {
+        e.preventDefault(); // chặn scroll khi nhấn Space
+        score++;
+        document.getElementById("score").textContent = `Điểm: ${score}`;
+      }
+    });
   </script>
 </body>
 </html>
